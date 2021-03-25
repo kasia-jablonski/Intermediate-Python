@@ -1,0 +1,205 @@
+(env) PS C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy> sqlite3 users.db
+SQLite version 3.29.0 2019-07-10 17:32:03
+Enter ".help" for usage hints.
+sqlite> .tables
+users
+sqlite> SELECT * FROM users;
+1|Megan|Megan Amendola|Meg
+2|Grace|Grace Hopper|Pioneer
+3|Alan|Alan Turing|Computer Scientist
+4|Katherine|Katherine Johnson|
+sqlite> [User(name='Grace', fullname='Grace Hopper', nickname='Pioneer'), User(name='Alan', fullname='Alan Turing', nickname='Computer Scientist'),  User(name='Katherine', fullname='Katherine Johnson', nickname='') ]
+   ...> [User(name='Grace', fullname='Grace Hopper', nickname='Pioneer'), User(name='Alan', fullname='Alan Turing', nickname='Computer Scientist'),  User(name='Katherine', fullname='Katherine Johnson', nickname='') ]
+   ...>
+Error: near "[User(name='Grace', fullname='Grace Hopper', nickname='Pioneer'), User(name='Alan', fullname='Alan Turing', nickname='Computer Scientist'),  User(name='Katherine', fullname='Katherine Johnson', nickname='') ]": syntax error
+(env) PS C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy> python
+Python 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import models
+>>> jethro = models.User(name='Jethr', fullname='Jethro Amendola', nickname='Bubba')
+>>> models.session.add(jethro)
+>>> models.session.new
+IdentitySet([<User(name=Jethr, fullname=Jethro Amendola, nickname=Bubba)>])
+>>> jethro.name = 'Jethro'
+>>> models.session.new     
+IdentitySet([<User(name=Jethro, fullname=Jethro Amendola, nickname=Bubba)>])
+>>> models.session.commit()
+>>> jethro.nickname = 'Jetty'
+>>> models.session.dirty
+>>> jethro.nickname = 'Jetty'
+>>> models.session.new
+IdentitySet([])
+>>> models.session.dirty
+IdentitySet([<User(name=Jethro, fullname=Jethro Amendola, nickname=Jetty)>])
+>>> models.session.commit()
+>>> exit()
+(env) PS C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy> sqlite3 users.db
+SQLite version 3.29.0 2019-07-10 17:32:03
+Enter ".help" for usage hints.
+sqlite> .tables
+sqlite> SELECT * FROM users;
+1|Megan|Megan Amendola|Meg
+2|Grace|Grace Hopper|Pioneer
+3|Alan|Alan Turing|Computer Scientist
+4|Katherine|Katherine Johnson|
+5|Jethro|Jethro Amendola|Jetty
+sqlite> .exit
+(env) PS C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy> python
+Python 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import models
+>>> jethro = models.sessio.query(models.User).filter(models.User.name=='Jethro').one()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: module 'models' has no attribute 'sessio'
+>>> jethro = models.session.query(models.User).filter(models.User.name=='Jethro').one() 
+>>> jethro
+<User(name=Jethro, fullname=Jethro Amendola, nickname=Jetty)>
+>>> jethro.nickname = 'Bubba'
+>>> models.session.dirty                                                                
+IdentitySet([<User(name=Jethro, fullname=Jethro Amendola, nickname=Bubba)>])
+>>> aang = models.User(name='Aang', fullname='Avatar Aang', nickname='Aangie')
+>>> models.session.add(aang)
+>>> models.session.new
+IdentitySet([<User(name=Aang, fullname=Avatar Aang, nickname=Aangie)>])
+>>> models.session.rollback()
+>>> models.session.dirty
+IdentitySet([])
+>>> models.session.new        
+IdentitySet([])
+>>> models.session.add(aang)
+>>> models.session.new                                                                  
+IdentitySet([<User(name=Aang, fullname=Avatar Aang, nickname=Aangie)>])
+>>> models.session.commit()
+>>> models.session.delete(aang)
+>>> models.session.commit()
+>>> models.session.query(models.User).filter(models.User.name=='Aang').one()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy\env\lib\site-packages\sqlalchemy\orm\query.py", line 2753, in one
+    return self._iter().one()
+  File "C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy\env\lib\site-packages\sqlalchemy\engine\result.py", line 1373, in one
+    return self._only_one_row(True, True, False)
+  File "C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy\env\lib\site-packages\sqlalchemy\engine\result.py", line 562, in _only_one_row
+    raise exc.NoResultFound(
+sqlalchemy.exc.NoResultFound: No row was found when one was required
+>>> models.session.query(models.User).filter(models.User.name=='Aang').count()
+0
+
+PS C:\Users\Developer\Documents\Computer Programming\Intermediate-Python> cd .\sqlalchemy\
+PS C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy> .\env\Scripts\activate
+(env) PS C:\Users\Developer\Documents\Computer Programming\Intermediate-Python\sqlalchemy> python
+Python 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import models
+>>> models.session.query(models.User)
+<sqlalchemy.orm.query.Query object at 0x000001CC60869550>
+>>> for user in models.session.query(models.User):
+...     print(user)
+... 
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+<User(name=Grace, fullname=Grace Hopper, nickname=Pioneer)>
+<User(name=Alan, fullname=Alan Turing, nickname=Computer Scientist)>
+<User(name=Katherine, fullname=Katherine Johnson, nickname=)>       
+<User(name=Jethro, fullname=Jethro Amendola, nickname=Jetty)>       
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+>>> for user in models.session.query(models.User.name):
+...     print(user)
+... 
+('Megan',)
+('Grace',)
+('Alan',)
+('Katherine',)
+('Jethro',)
+('Megan',)
+>>> for user in models.session.query(models.User.name):
+...     print(user.name)
+... 
+Megan
+Grace
+Alan
+Katherine
+Jethro
+Megan
+>>> for user in models.session.query(models.User.name).order_by(models.User.name):
+...     print(user.name)
+... 
+Alan
+Grace
+Jethro
+Katherine
+Megan
+Megan
+>>> for user in models.session.query(models.User.name).order_by(models.User.name.desc()):
+...     print(user.name)
+... 
+Megan
+Megan
+Katherine
+Jethro
+Grace
+Alan
+>>> for user in models.session.query(models.User.name).order_by(models.User.name)[:2]:
+...     print(user.name)
+... 
+Alan
+Grace
+>>> for user in models.session.query(models.User.name).order_by(models.User.name)[2:4]: 
+...     print(user.name)
+... 
+Jethro
+Katherine
+>>> models.session.query(models.User).all()
+[<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>, <User(name=Grace, fullname=Grace Hopper, nickname=Pioneer)>, <User(name=Alan, 
+fullname=Alan Turing, nickname=Computer Scientist)>, <User(name=Katherine, fullname=Katherine Johnson, nickname=)>, <User(name=Jethro, fullname=Jethro Amendola, nickname=Jetty)>, <User(name=Megan, fullname=Megan Amendola, nickname=Meg)>]
+>>> models.session.query(models.User).order_by(models.User.name).first()
+<User(name=Alan, fullname=Alan Turing, nickname=Computer Scientist)>
+>>> models.session.query(models.User).filter_by(name='Jethro')
+<sqlalchemy.orm.query.Query object at 0x000001CC61D38AC0>
+>>> models.session.query(models.User).filter(models.User.name=='Jethro')
+<sqlalchemy.orm.query.Query object at 0x000001CC61DDE8B0>
+>>> for user in models.session.query(models.User).filter(models.User.name=='Jethro'):
+...     print(user)     
+... 
+<User(name=Jethro, fullname=Jethro Amendola, nickname=Jetty)>
+>>> me = models.User(name='Megan', fullname='Megan Amendola', nickname='Megatron')
+>>> models.session.add(me)
+>>> models.session.commit()
+>>> for user in models.session.query(models.User).filter(models.User.name=='Megan'):  
+...     print(user)
+... 
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+<User(name=Megan, fullname=Megan Amendola, nickname=Megatron)>
+>>> for user in models.session.query(models.User).filter(models.User.name=='Megan').filter(models.User.nickname=='Megatron'):
+...     print(user)
+... 
+<User(name=Megan, fullname=Megan Amendola, nickname=Megatron)>
+>>> cat = models.User(name='Joni', fullname='Joni the Cat', nickname='Key Grip')
+>>> models.session.add(cat)
+>>> models.session.new
+IdentitySet([<User(name=Joni, fullname=Joni the Cat, nickname=Key Grip)>])
+>>> for user in models.session.query(models.User):                                                                           
+...     print(user)
+... 
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+<User(name=Grace, fullname=Grace Hopper, nickname=Pioneer)>
+<User(name=Alan, fullname=Alan Turing, nickname=Computer Scientist)>
+<User(name=Katherine, fullname=Katherine Johnson, nickname=)>
+<User(name=Jethro, fullname=Jethro Amendola, nickname=Jetty)>
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+<User(name=Megan, fullname=Megan Amendola, nickname=Megatron)>
+<User(name=Joni, fullname=Joni the Cat, nickname=Key Grip)>
+>>> cat.nickname = 'Producer'
+>>> for user in models.session.query(models.User):
+...     print(user)
+...
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+<User(name=Grace, fullname=Grace Hopper, nickname=Pioneer)>
+<User(name=Alan, fullname=Alan Turing, nickname=Computer Scientist)>
+<User(name=Katherine, fullname=Katherine Johnson, nickname=)>
+<User(name=Jethro, fullname=Jethro Amendola, nickname=Jetty)>
+<User(name=Megan, fullname=Megan Amendola, nickname=Meg)>
+<User(name=Megan, fullname=Megan Amendola, nickname=Megatron)>
+<User(name=Joni, fullname=Joni the Cat, nickname=Producer)>
+>>> models.session.commit()
