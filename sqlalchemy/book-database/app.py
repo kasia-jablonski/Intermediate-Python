@@ -210,5 +210,5 @@ if __name__ == '__main__':
     Base.metadata.create_all(engine)
     add_cvs()
     app()
-    for book in session.query(Book):
-        print(book)
+    # for book in session.query(Book):
+    #     print(book)
