@@ -19,6 +19,7 @@ cols = range(10)
 {student: points for student, points in zip(['Kenneth', 'Dave', 'Joy'], [123, 456, 789])}
 # {'Kenneth': 123, 'Dave': 456, 'Joy': 789}
 
+total_nums = range(1, 101)
 fizzbuzzes = {
     'fizz': [n for n in total_nums if n % 3 == 0],
     'buzz' : [n for n in total_nums if n % 7 == 0] 
