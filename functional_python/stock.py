@@ -73,3 +73,22 @@ map() takes a function and an iterable. The function should take a single argume
 
 [func(item) for item in iterable] achieves the same result, plus turns the results into a list. For simple, single-serving applications, this is often a better choice since it's often more readable at a glance.
 '''
+
+### FILTER ###
+def is_long_book(book):
+    """Does a book have 600+ pages?"""
+    return book.number_of_pages >= 600
+
+long_books = list(filter(is_long_book, BOOKS))
+# Tha same as comprehension:
+long_books2 = [book for book in BOOKS if book.number_of_pages >= 600] # / if is_long_book(book)
+
+print(len(BOOKS)) # 28
+print(len(long_books)) # 12
+'''
+filter() takes a function and an iterable. The function, like with map(), takes only a single argument and is applied to each item in the iterable. If the function returns a truthy value for the item, the item is sent back to filter() which, ultimately, returns a new iterable of the filtered items.
+
+You can achieve the same effect with [item for item in iterable if func(item)]. Again, like with map(), this can be more quickly readable for small applications.
+
+filterfalse() works just like filter() but only returns things where the filter function gives back a False or non-truthy value.
+'''
