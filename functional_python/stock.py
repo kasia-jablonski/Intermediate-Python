@@ -92,3 +92,30 @@ You can achieve the same effect with [item for item in iterable if func(item)]. 
 
 filterfalse() works just like filter() but only returns things where the filter function gives back a False or non-truthy value.
 '''
+
+### CHAINING ###
+def has_roland(book):
+    return any(["Roland" in subject for subject in book.subjects])
+
+def titlecase(book):
+    book = copy(book)
+    book.title = book.title.title()
+    return book
+
+# print(list(map(titlecase, filter(has_roland, BOOKS))))
+def is_good_deal(book):
+    return book.price <= 5
+# Looks for books that are on sale cheaper than $5 and sorts by price
+cheap_books = sorted(
+    filter(is_good_deal, map(sales_price, BOOKS)),
+    key=attrgetter('price')
+)
+print(cheap_books[0].price) # 2.8
+
+'''
+Since filter(), map(), sorted() all return iterables, we can chain them together. Chained functions resolve, or happen, from the inside out, so the innermost function runs first.
+
+This is another reason why functions usually return a value at the end. It makes it easier to use them all together.
+
+any(iterable) returns True if any of the items in the iterable are truthy. Similar is the function all(). all(iterable) returns True if all of the items in the iterable are truthy.
+'''
