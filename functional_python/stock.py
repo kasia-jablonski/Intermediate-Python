@@ -140,3 +140,14 @@ Think about adding up all of the numbers in a column. You add the top two, then 
 
 Calling a function over again from within itself is known as recursion and it's what makes reduce() able to do its job.
 '''
+
+### LAMBDA ###
+total = reduce(lambda x, y: x + y, [b.price for b in BOOKS])
+long_books = filter(lambda book: book.number_of_pages >=600, BOOKS)
+good_deals = filter(lambda book: book.price <= 6, BOOKS)
+
+'''
+lambda, like def, is the keyword that marks a new function. Lambda functions don't have to have a name, though.
+
+Lambdas can't contain new lines (outside of containers) or assignments.
+'''
