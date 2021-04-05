@@ -1,6 +1,6 @@
 import json
 from copy import copy
-from functools import reduce
+from functools import partial, reduce
 from operator import attrgetter, itemgetter
 
 
@@ -150,4 +150,19 @@ good_deals = filter(lambda book: book.price <= 6, BOOKS)
 lambda, like def, is the keyword that marks a new function. Lambda functions don't have to have a name, though.
 
 Lambdas can't contain new lines (outside of containers) or assignments.
+'''
+
+### PARTIALS ###
+def mark_down(book, discount):
+    book = copy(book)
+    book.price = round(book.price - book.price*discount, 2)
+    return book
+
+standard = partial(mark_down, discount=.2)
+# print(standard(BOOKS[0]).price)
+half = partial(mark_down, discount=.5)
+half_price_books = map(half, filter(is_long_book, BOOKS))
+
+'''
+functools.partial lets you preset some arguments to a function. You can then call the new function with the remaining arguments as needed. This often ends up being really handy when used with map() and filter().
 '''
